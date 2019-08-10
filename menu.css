@@ -1,0 +1,78 @@
+/* decoracao */
+body {
+    margin: 0;
+    text-align: center;
+}
+/* animado */
+html,
+body {
+    overflow-x: hidden;
+    width: 100%;
+    background-color: #DDE2E3;
+}
+.container-menus {
+    -webkit-transform: translateX(0);
+            transform: translateX(0);
+    -webkit-transition: transform 300ms ease;
+            transition: -webkit-transform 300ms ease;
+    width: 200%;
+}
+/* hack android velho */
+body { -webkit-animation: bugfix infinite 1s; }
+@-webkit-keyframes bugfix {
+  from { padding: 0; }
+  to { padding: 0; }
+}
+
+.align-left{
+    text-align: justify;
+    text-justify: inter-word;
+}
+.center{
+    text-align: center;
+    font-weight: bolder;
+}
+.center p{
+    font-size: 20px;
+}
+p{
+    font-size: 18px;
+    line-height: 1.6;
+}
+.img30{
+    border: 3px solid;
+    border-radius: 33%;
+    height: 90px;
+    border-color: white;
+}
+
+nav a{
+    font-size: 18px;
+    font-weight: bolder;
+    color: black;
+}
+figcaption{
+    margin-top: 6px;
+    margin-right: 10px;
+    text-align: right;
+    font-weight: bolder;
+}
+.navbar{
+    background-color: #C3D0D9;
+}
+
+.navbar div{
+    border: 3px solid;
+    border-radius: 33%;
+    border-color: white;
+}
+
+figure img{
+    min-width: 280px;
+}
+a{
+    color: black;
+}
+.item-menu{
+    font-size: 90%;
+}
