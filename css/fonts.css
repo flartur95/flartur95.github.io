@@ -1,0 +1,17 @@
+/*
+FONTS CSS of flartur95.github.io
+Fonts Imports
+*/
+@import url('https://fonts.googleapis.com/css?family=Bebas+Neue|Rubik&display=swap');
+
+*{
+	font-family: 'Bebas Neue', sans-serif;
+	font-family: 'Rubik', sans-serif;
+}
+
+.font-bebas{
+	font-family: 'Bebas Neue', sans-serif !important;
+}
+.font-rubik{
+	font-family: 'Rubik', sans-serif !important;
+}

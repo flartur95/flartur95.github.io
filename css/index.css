@@ -1,9 +1,12 @@
-mr-1{
-	margin-right: 10px;
+
+/*
+Index CSS of flartur95.github.io
+NAVBAR & Itens
+*/
+
+.nav-img-artur{
+	border-radius: 5px;
 }
-mr-2{
-	margin-right: 20px;
-}
-mr-3{
-	margin-right: 30px;
+.navbar-brand{
+	display: inline !important;
 }
