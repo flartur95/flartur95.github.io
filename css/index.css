@@ -84,3 +84,8 @@
 	100% {border-top: 4px solid #68AAE8;}
 }
 
+.card-img-top{
+	max-height: 170px;
+    object-fit: cover;
+}
+
