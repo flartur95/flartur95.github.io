@@ -41,9 +41,7 @@
 	position: relative;
 }
 
-
 /*TYPER*/
-
 .line-1{
     position: relative;
     top: 50%;  
@@ -55,7 +53,7 @@
     white-space: nowrap;
     overflow: hidden;
     transform: translateY(-50%);
-        
+    
 }
 /* Animation */
 .anim-typewriter{
@@ -70,3 +68,19 @@
   from{border-right-color: rgba(255,255,255,.75);}
   to{border-right-color: transparent;}
 }
+
+/*CARD*/
+.card-body{
+    border-top: 4px solid #68AAE8;   
+}
+.anim-card{
+	animation: cardtop 4s infinite;
+}
+
+@keyframes cardtop{
+	0%   {border-top: 4px solid #809FFF;}
+	25%  {border-top: 4px solid #F5E8AA;}
+	50%  {border-top: 4px solid #DA4531;}
+	100% {border-top: 4px solid #68AAE8;}
+}
+
