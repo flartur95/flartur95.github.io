@@ -74,7 +74,7 @@
     border-top: 4px solid #68AAE8;   
 }
 .anim-card{
-	animation: cardtop 4s infinite;
+	animation: cardtop 4s;
 }
 
 @keyframes cardtop{
