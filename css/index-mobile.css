@@ -1,0 +1,21 @@
+@media (max-width: 600px) 
+{
+	.navbar{
+		padding: 0 !important;
+	}
+	.nv-i{
+		display: none;
+	}
+
+	.dropdown{
+		display: block;
+	}
+
+	.dropdown-menu {
+		min-width: 8rem !important;
+	}
+
+	.remove-just{
+		justify-content: flex-start !important;
+	}
+}
