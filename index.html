@@ -10,180 +10,40 @@
 
     <title>Artur França</title>
   </head>
-  <style type="text/css">
-  	.bubble{
-	    position: absolute;
-	    z-index: -999;
-	    opacity: 0.5;
-	    height: 500px;
-  	}
-  	#b1{
-  		right: 170px;
-  	}
-  	#b2{
-  		right: 210px;
-  		bottom:420px;
-  	}
-    #b3{
-      right: 170px;
-      bottom:120px;
+  <style>
+    main {
+      width: 100vw;
+      height: 100vh;
+      background: floralwhite;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      margin: 0;
     }
-    #b4{
-      right: 210px;
-      bottom:20px;
-    }
-
-  	.blue{
-  		color: #0099ff;
-  	}
-  	.side-wave{
-  		position: fixed;
-    	z-index: -19;
-    	right: 40%;
-      opacity: 1;
-    	transform: rotate(90deg);
-  	}
-    .side-wave2{
-      position: fixed;
-      z-index: -19;
-      right: 40%;
-      opacity: 0.5;
-      transform: rotate(80deg);
-    }
-    .side-wave3{
-      position: fixed;
-      z-index: -19;
-      right: 39%;
-      opacity: 0.3;
-      transform: rotate(78deg);
-    }
-  	.section-name{
-  		font-size: 27px;
-  	}
-    h1{
-      font-size: 46px !important;
-      font-weight: bolder;
-    }
-    h2{
-      font-size: 40px !important;
-      font-weight: bolder;
-    }
-    ul{
-      font-size: 27px !important;
-    }
-    .box{
-      height: 150px;
-      width: 120px;
+    .photo img{
+      max-height: 150px;
+      border-radius: 33px;
+      margin-right: 3px;
     }
   </style>
   <body>
-  	<div>
-		<svg class="side-wave" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
-			<path fill="#0099ff" fill-opacity="1" d="M0,128L120,32L240,128L360,32L480,224L600,128L720,192L840,160L960,128L1080,128L1200,32L1320,128L1440,0L1440,320L1320,320L1200,320L1080,320L960,320L840,320L720,320L600,320L480,320L360,320L240,320L120,320L0,320Z">
-			</path>
-		</svg>
-    <svg class="side-wave2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
-      <path fill="#0099ff" fill-opacity="1" d="M0,128L120,32L240,128L360,32L480,224L600,128L720,192L840,160L960,128L1080,128L1200,32L1320,128L1440,0L1440,320L1320,320L1200,320L1080,320L960,320L840,320L720,320L600,320L480,320L360,320L240,320L120,320L0,320Z">
-      </path>
-    </svg>
-     <svg class="side-wave3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
-      <path fill="#0099ff" fill-opacity="1" d="M0,128L120,32L240,128L360,32L480,224L600,128L720,192L840,160L960,128L1080,128L1200,32L1320,128L1440,0L1440,320L1320,320L1200,320L1080,320L960,320L840,320L720,320L600,320L480,320L360,320L240,320L120,320L0,320Z">
-      </path>
-    </svg>
-	</div>
-  	<main class="container">
-  		<br>
-  		<br>
-  		<br>
-  		<br>
-  		<section class="d-inline-flex section-name">  		
-		<!-- imagem -->
-			<div class="w-50 section-name2">
-        <h1 class="blue">Hello, my name is Artur</h1>
-        <h2>Fullstack Developer</h2>
-				<!-- <img src="img/php.png"/> -->
-        
-			</div>
-  		<!-- NOME -->
-  			<div class="w-50">
-          <div class="box"></div>
-
-          <p>Há 5 anos estudo programação e TI, me formei em técnico em informática, hoje estudo Ánalise e Desenvolvimento de Sistemas, sou programador PHP na Qualitor, amo JQuery, CSS3! #fiqueemcasa #vidasnegrasimportam</p>
-
-          <p>Quem sou eu?</p>
-          <p>Eu sou uma pessoa ansiosa por projetos, construções, testes, depurações de erros.
-          Prezo por um código limpo, semântico e organizado.
-          Me preocupo com a arquitetura de software, front, back-end e nas APIs que as colam.
-          Adoro trabalhar com uma equipe onde posso aprender, experimentar e interagir constantemente.</p>
-	    		<div>
-	    			<a href=""></a>
-	    			<a href=""></a>
-	    		</div>	
-  			</div>
-  			<!-- BUBBLES -->
-  			<div>
-  				<svg id="b1" class="bubble" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-				  <path fill="#0099ff" d="M42.8,-50C51.4,-34.3,51.3,-17.1,52.3,1C53.3,19.1,55.3,38.2,46.8,54.8C38.2,71.3,19.1,85.3,2.6,82.7C-14,80.2,-28,61,-42.2,44.5C-56.4,28,-70.9,14,-71.9,-1C-72.9,-16,-60.4,-32,-46.2,-47.8C-32,-63.5,-16,-79.1,0.6,-79.7C17.1,-80.2,34.3,-65.8,42.8,-50Z" transform="translate(100 100)" />
-				</svg>
-				<svg id="b2" class="bubble" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-				  <path fill="#0099ff" d="M34.7,-33.3C45.3,-24.1,54.4,-12,55.2,0.7C55.9,13.5,48.2,27,37.6,41C27,55.1,13.5,69.6,-0.9,70.5C-15.4,71.4,-30.7,58.8,-42.1,44.8C-53.5,30.7,-60.9,15.4,-64.5,-3.5C-68,-22.4,-67.6,-44.8,-56.2,-54.1C-44.8,-63.3,-22.4,-59.4,-5.2,-54.2C12,-49,24.1,-42.6,34.7,-33.3Z" transform="translate(100 100)" />
-				</svg>
-        <svg id="b3" class="bubble" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-          <path fill="#0099ff" d="M42.8,-50C51.4,-34.3,51.3,-17.1,52.3,1C53.3,19.1,55.3,38.2,46.8,54.8C38.2,71.3,19.1,85.3,2.6,82.7C-14,80.2,-28,61,-42.2,44.5C-56.4,28,-70.9,14,-71.9,-1C-72.9,-16,-60.4,-32,-46.2,-47.8C-32,-63.5,-16,-79.1,0.6,-79.7C17.1,-80.2,34.3,-65.8,42.8,-50Z" transform="translate(100 100)" />
-        </svg>
-        <svg id="b4" class="bubble" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-          <path fill="#0099ff" d="M34.7,-33.3C45.3,-24.1,54.4,-12,55.2,0.7C55.9,13.5,48.2,27,37.6,41C27,55.1,13.5,69.6,-0.9,70.5C-15.4,71.4,-30.7,58.8,-42.1,44.8C-53.5,30.7,-60.9,15.4,-64.5,-3.5C-68,-22.4,-67.6,-44.8,-56.2,-54.1C-44.8,-63.3,-22.4,-59.4,-5.2,-54.2C12,-49,24.1,-42.6,34.7,-33.3Z" transform="translate(100 100)" />
-        </svg>
-
-  			</div>
-  		</section class="m-3">
-  		<!-- hard skills -->
-  		<section class="m-3">
-        <div class="w-50">
-          <h2>Hard Skills</h2>
-        </div>
-        <div class="w-50">
-          <ul>
-            <li>PHP</li>
-            <li>MYSQL</li>
-            <li>CSS3</li>
-            <li>HTML5</li>
-            <li>LARAVEL</li>
-            <li>SEO</li>
-            <li>JQUERY</li>
-            <li>JAVASCRIPT</li>
-        </ul>
-        </div>
-  			
-  		</section>
-  		<!-- PORTFOLIO -->
-  		<section class="m-3">
-  			<h2>Portfolio</h2>
-  			<div>
-  				<!-- <img src="img/github.png"> -->
-  			</div>
-  		</section>
-      <!-- Estudos -->
-      <section class="m-3">
-        <h2>Futuros estudos</h2>
-        <ul>
-          <li>React</li>
-          <li>Next.js</li>
-          <li>Spring Boot</li>
-          <li>Python</li>
-          <li>Django</li>
-          <li>Machine Learning</li>
-          <li>C#</li>
-          <li>Unreal Engine</li>
-        </ul>
-      </section>
-  		<!-- contato -->
-  		<section class="m-3">
-  			<h2>Contact me</h2>
-			<h3>flartur95@gmail.com</h3>
-  		</section>
-  	</main>
-    
+    <main>
+      <div class="photo">
+        <img src="https://avatars3.githubusercontent.com/u/41313318?s=460&amp;u=35ea8784ea01639f01079af3ef6beccb81834f41&amp;v=4">
+      </div>
+      <div class="description">
+        <h1>Artur França Lezama</h1>
+        <h2>Developer</h2>
+        <p>I'm a cool guy!</p>
+      </div>
+      <div class="social-links">
+        <a href=""><i></i></a>
+        <a href=""><i></i></a>
+        <a href=""><i></i></a>
+        <a href=""><i></i></a>
+      </div>
+    </main>    
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
