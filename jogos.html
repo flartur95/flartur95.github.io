@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Mini games — Artur França Lezama</title>
+<style>
+  :root{
+    --bg:        #0F1417;
+    --surface:   #161D21;
+    --surface-2: #1C252A;
+    --line:      #2A363C;
+    --text:      #E7EDF0;
+    --muted:     #8FA3AC;
+    --teal:      #4FD1C5;
+    --amber:     #F2B84B;
+    --red:       #E5636B;
+  }
+  *{ box-sizing:border-box; }
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    line-height:1.55;
+  }
+  h1,h2,h3,.mono{ font-family:'JetBrains Mono','Consolas',monospace; font-weight:600; }
+  a{ color:inherit; }
+  .wrap{ max-width:760px; margin:0 auto; padding:0 24px 80px; }
+
+  header{ padding:56px 0 32px; border-bottom:1px solid var(--line); }
+  header .back{ color:var(--teal); text-decoration:none; font-size:0.9rem; }
+  header h1{ font-size:2rem; margin:18px 0 8px; }
+  header p{ color:var(--muted); margin:0; }
+
+  nav.tabs{
+    display:flex; flex-wrap:wrap; gap:10px;
+    margin:28px 0 40px;
+  }
+  nav.tabs button{
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.85rem;
+    background:var(--surface);
+    color:var(--muted);
+    border:1px solid var(--line);
+    padding:10px 16px;
+    cursor:pointer;
+  }
+  nav.tabs button.active{
+    color:var(--bg);
+    background:var(--teal);
+    border-color:var(--teal);
+  }
+
+  .game{ display:none; }
+  .game.active{ display:block; }
+  .game h2{ font-size:1.3rem; margin:0 0 6px; }
+  .game .sub{ color:var(--muted); margin:0 0 22px; font-size:0.92rem; }
+
+  .panel{
+    background:var(--surface);
+    border:1px solid var(--line);
+    padding:20px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:16px;
+  }
+
+  .hud{ display:flex; gap:20px; font-size:0.9rem; color:var(--muted); }
+  .hud b{ color:var(--teal); }
+
+  .btn{
+    font-family:'Inter',sans-serif; font-weight:600; font-size:0.9rem;
+    background:transparent; color:var(--text);
+    border:1px solid var(--line); padding:9px 18px; cursor:pointer;
+  }
+  .btn:hover{ border-color:var(--teal); color:var(--teal); }
+
+  canvas{ background:#0B1213; border:1px solid var(--line); max-width:100%; }
+
+  .overlay{
+    display:none; flex-direction:column; align-items:center; gap:12px;
+    position:relative; margin-top:-260px; padding:20px;
+    background:rgba(11,18,19,0.92); border:1px solid var(--line);
+  }
+
+  /* Hangman */
+  #hangman-ascii{
+    font-family:'JetBrains Mono',monospace; white-space:pre; color:var(--amber);
+    font-size:0.95rem; line-height:1.2;
+  }
+  #hangman-word{ font-family:'JetBrains Mono',monospace; font-size:1.6rem; letter-spacing:8px; }
+  .keyboard{ display:flex; flex-wrap:wrap; gap:6px; max-width:420px; justify-content:center; }
+  .keyboard button{
+    width:34px; height:34px; font-family:'JetBrains Mono',monospace;
+    background:var(--surface-2); color:var(--text); border:1px solid var(--line); cursor:pointer;
+  }
+  .keyboard button:disabled{ opacity:0.35; cursor:default; }
+  .keyboard button.correct{ background:var(--teal); color:#0B1213; border-color:var(--teal); }
+  .keyboard button.wrong{ background:var(--red); color:#0B1213; border-color:var(--red); }
+
+  /* Tic-tac-toe */
+  #ttt-board{ display:grid; grid-template-columns:repeat(3,72px); grid-template-rows:repeat(3,72px); gap:6px; }
+  #ttt-board button{
+    background:var(--surface-2); border:1px solid var(--line); color:var(--teal);
+    font-family:'JetBrains Mono',monospace; font-size:2rem; cursor:pointer;
+  }
+  #ttt-status{ font-size:0.95rem; color:var(--muted); }
+
+  /* Crossword */
+  #cross-grid{ display:grid; grid-template-columns:repeat(4,52px); grid-template-rows:repeat(4,52px); gap:3px; }
+  .cross-cell{ position:relative; background:var(--surface-2); border:1px solid var(--line); }
+  .cross-cell.blocked{ background:var(--bg); border-color:var(--bg); }
+  .cross-cell input{
+    width:100%; height:100%; text-align:center; text-transform:uppercase;
+    background:transparent; border:none; color:var(--text); font-family:'JetBrains Mono',monospace;
+    font-size:1.3rem;
+  }
+  .cross-cell input:focus{ outline:1px solid var(--teal); }
+  .cross-cell input.ok{ color:var(--teal); }
+  .cross-cell input.bad{ color:var(--red); }
+  .cross-num{ position:absolute; top:2px; left:3px; font-size:0.6rem; color:var(--muted); }
+  .clues{ font-size:0.88rem; color:var(--muted); max-width:420px; }
+  .clues p{ margin:4px 0; }
+  .clues b{ color:var(--text); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <a class="back mono" href="index.html">← voltar pro portfólio</a>
+    <h1>Mini games</h1>
+    <p>Uma pausa pra jogar enquanto o site carrega o resto. Escolhe um jogo abaixo.</p>
+  </header>
+
+  <nav class="tabs">
+    <button class="mono active" data-game="snake">Cobrinha</button>
+    <button class="mono" data-game="hangman">Forca</button>
+    <button class="mono" data-game="ttt">Jogo da Velha</button>
+    <button class="mono" data-game="pacman">Pac-Man</button>
+    <button class="mono" data-game="cross">Palavras Cruzadas</button>
+  </nav>
+
+  <!-- SNAKE -->
+  <section class="game active" id="game-snake">
+    <h2>Jogo da Cobrinha</h2>
+    <p class="sub">Use as setas do teclado. Coma os quadrados âmbar sem bater na parede ou em si mesma.</p>
+    <div class="panel">
+      <div class="hud">Pontos: <b id="snake-score">0</b></div>
+      <canvas id="snake-canvas"></canvas>
+      <button class="btn" id="snake-restart">Reiniciar</button>
+    </div>
+  </section>
+
+  <!-- HANGMAN -->
+  <section class="game" id="game-hangman">
+    <h2>Jogo da Forca</h2>
+    <p class="sub">Palavras do mundo da programação. Clica nas letras pra tentar adivinhar.</p>
+    <div class="panel">
+      <div id="hangman-ascii"></div>
+      <div id="hangman-word"></div>
+      <div class="hud">Erros: <b id="hangman-wrong">0</b>/6</div>
+      <div class="keyboard" id="hangman-keys"></div>
+      <div id="hangman-msg" class="hud"></div>
+      <button class="btn" id="hangman-restart">Nova palavra</button>
+    </div>
+  </section>
+
+  <!-- TIC TAC TOE -->
+  <section class="game" id="game-ttt">
+    <h2>Jogo da Velha</h2>
+    <p class="sub">Dois jogadores no mesmo teclado/mouse — X começa.</p>
+    <div class="panel">
+      <div id="ttt-board"></div>
+      <div id="ttt-status" class="mono">Vez de: X</div>
+      <button class="btn" id="ttt-restart">Reiniciar</button>
+    </div>
+  </section>
+
+  <!-- PACMAN -->
+  <section class="game" id="game-pacman">
+    <h2>Pac-Man</h2>
+    <p class="sub">Setas do teclado pra mover. Come todos os pontinhos sem deixar o fantasma te pegar.</p>
+    <div class="panel">
+      <div class="hud">Pontos: <b id="pac-score">0</b></div>
+      <canvas id="pac-canvas"></canvas>
+      <div id="pac-msg" class="hud"></div>
+      <button class="btn" id="pac-restart">Reiniciar</button>
+    </div>
+  </section>
+
+  <!-- CROSSWORD -->
+  <section class="game" id="game-cross">
+    <h2>Palavras Cruzadas</h2>
+    <p class="sub">Tema: programação. Preenche a grade e confere.</p>
+    <div class="panel">
+      <div id="cross-grid"></div>
+      <div class="clues">
+        <p><b>1A.</b> Diversão em forma de desafio (4)</p>
+        <p><b>1V.</b> Linguagem de programação usada no Android (4)</p>
+        <p><b>2V.</b> Em inglês, sinônimo de "jogo" (4)</p>
+      </div>
+      <div id="cross-msg" class="hud"></div>
+      <button class="btn" id="cross-check">Conferir</button>
+    </div>
+  </section>
+
+</div>
+
+<script>
+/* ---------- TAB SWITCHING ---------- */
+document.querySelectorAll('nav.tabs button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('nav.tabs button').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.game').forEach(g=>g.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('game-'+btn.dataset.game).classList.add('active');
+  });
+});
+
+/* ---------- SNAKE ---------- */
+(function(){
+  const canvas = document.getElementById('snake-canvas');
+  const ctx = canvas.getContext('2d');
+  const cell = 20, cols = 20, rows = 20;
+  canvas.width = cols*cell; canvas.height = rows*cell;
+  let snake, dir, nextDir, food, score, alive, loopId;
+
+  function reset(){
+    snake = [{x:10,y:10},{x:9,y:10},{x:8,y:10}];
+    dir = {x:1,y:0}; nextDir = dir;
+    placeFood(); score = 0; alive = true;
+    document.getElementById('snake-score').textContent = score;
+    draw();
+  }
+  function placeFood(){
+    let p;
+    do{ p = {x:Math.floor(Math.random()*cols), y:Math.floor(Math.random()*rows)}; }
+    while(snake.some(s=>s.x===p.x&&s.y===p.y));
+    food = p;
+  }
+  function tick(){
+    if(!alive) return;
+    dir = nextDir;
+    const head = {x:snake[0].x+dir.x, y:snake[0].y+dir.y};
+    if(head.x<0||head.x>=cols||head.y<0||head.y>=rows||snake.some(s=>s.x===head.x&&s.y===head.y)){
+      alive = false; return;
+    }
+    snake.unshift(head);
+    if(head.x===food.x && head.y===food.y){
+      score++; document.getElementById('snake-score').textContent = score; placeFood();
+    } else { snake.pop(); }
+    draw();
+  }
+  function draw(){
+    ctx.fillStyle = '#0B1213'; ctx.fillRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle = '#F2B84B';
+    ctx.fillRect(food.x*cell+1, food.y*cell+1, cell-2, cell-2);
+    snake.forEach((s,i)=>{
+      ctx.fillStyle = i===0 ? '#4FD1C5' : '#2f8f86';
+      ctx.fillRect(s.x*cell+1, s.y*cell+1, cell-2, cell-2);
+    });
+    if(!alive){
+      ctx.fillStyle = 'rgba(11,18,19,0.85)';
+      ctx.fillRect(0,0,canvas.width,canvas.height);
+      ctx.fillStyle = '#E7EDF0';
+      ctx.font = '18px monospace';
+      ctx.textAlign = 'center';
+      ctx.fillText('Fim de jogo — clique em Reiniciar', canvas.width/2, canvas.height/2);
+    }
+  }
+  document.addEventListener('keydown', e=>{
+    if(!document.getElementById('game-snake').classList.contains('active')) return;
+    if(e.key.indexOf('Arrow')===0) e.preventDefault();
+    if(e.key==='ArrowUp' && dir.y===0) nextDir={x:0,y:-1};
+    else if(e.key==='ArrowDown' && dir.y===0) nextDir={x:0,y:1};
+    else if(e.key==='ArrowLeft' && dir.x===0) nextDir={x:-1,y:0};
+    else if(e.key==='ArrowRight' && dir.x===0) nextDir={x:1,y:0};
+  });
+  document.getElementById('snake-restart').addEventListener('click', reset);
+  reset();
+  clearInterval(loopId);
+  loopId = setInterval(tick, 130);
+})();
+
+/* ---------- HANGMAN ---------- */
+(function(){
+  const words = ['JAVASCRIPT','TERMINAL','SERVIDOR','TECLADO','MONITOR','ALGORITMO','NAVEGADOR','FUNCAO','VARIAVEL','COMPILADOR'];
+  const stages = [
+`  +---+
+      |
+      |
+      |
+      |
+=========`,
+`  +---+
+  O   |
+      |
+      |
+      |
+=========`,
+`  +---+
+  O   |
+  |   |
+      |
+      |
+=========`,
+`  +---+
+  O   |
+ /|   |
+      |
+      |
+=========`,
+`  +---+
+  O   |
+ /|\\  |
+      |
+      |
+=========`,
+`  +---+
+  O   |
+ /|\\  |
+ /    |
+      |
+=========`,
+`  +---+
+  O   |
+ /|\\  |
+ / \\  |
+      |
+=========`
+  ];
+  let word, guessed, wrong;
+
+  function reset(){
+    word = words[Math.floor(Math.random()*words.length)];
+    guessed = new Set(); wrong = 0;
+    document.getElementById('hangman-wrong').textContent = wrong;
+    document.getElementById('hangman-ascii').textContent = stages[0];
+    document.getElementById('hangman-msg').textContent = '';
+    renderWord();
+    renderKeys();
+  }
+  function renderWord(){
+    document.getElementById('hangman-word').textContent =
+      word.split('').map(l=>guessed.has(l)?l:'_').join(' ');
+  }
+  function renderKeys(){
+    const box = document.getElementById('hangman-keys');
+    box.innerHTML = '';
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').forEach(l=>{
+      const b = document.createElement('button');
+      b.textContent = l;
+      b.addEventListener('click', ()=>guess(l,b));
+      box.appendChild(b);
+    });
+  }
+  function guess(l,btn){
+    btn.disabled = true;
+    if(word.includes(l)){
+      guessed.add(l); btn.classList.add('correct'); renderWord();
+      if(word.split('').every(c=>guessed.has(c))){
+        document.getElementById('hangman-msg').textContent = 'Você venceu! 🎉';
+        document.querySelectorAll('#hangman-keys button').forEach(b=>b.disabled=true);
+      }
+    } else {
+      wrong++; btn.classList.add('wrong');
+      document.getElementById('hangman-wrong').textContent = wrong;
+      document.getElementById('hangman-ascii').textContent = stages[wrong];
+      if(wrong>=6){
+        document.getElementById('hangman-msg').textContent = 'Fim de jogo — a palavra era ' + word;
+        document.querySelectorAll('#hangman-keys button').forEach(b=>b.disabled=true);
+      }
+    }
+  }
+  document.getElementById('hangman-restart').addEventListener('click', reset);
+  reset();
+})();
+
+/* ---------- TIC TAC TOE ---------- */
+(function(){
+  let board, turn, over;
+  const wins = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+
+  function reset(){
+    board = Array(9).fill(null); turn = 'X'; over = false;
+    document.getElementById('ttt-status').textContent = 'Vez de: X';
+    render();
+  }
+  function render(){
+    const box = document.getElementById('ttt-board');
+    box.innerHTML = '';
+    board.forEach((v,i)=>{
+      const b = document.createElement('button');
+      b.textContent = v || '';
+      b.style.color = v==='X' ? 'var(--teal)' : 'var(--amber)';
+      b.addEventListener('click', ()=>play(i));
+      box.appendChild(b);
+    });
+  }
+  function play(i){
+    if(over || board[i]) return;
+    board[i] = turn;
+    const w = wins.find(([a,b,c])=>board[a] && board[a]===board[b] && board[b]===board[c]);
+    if(w){
+      over = true;
+      document.getElementById('ttt-status').textContent = turn + ' venceu! 🎉';
+    } else if(board.every(c=>c)){
+      over = true;
+      document.getElementById('ttt-status').textContent = 'Empate!';
+    } else {
+      turn = turn==='X' ? 'O' : 'X';
+      document.getElementById('ttt-status').textContent = 'Vez de: ' + turn;
+    }
+    render();
+  }
+  document.getElementById('ttt-restart').addEventListener('click', reset);
+  reset();
+})();
+
+/* ---------- PAC-MAN (simplified) ---------- */
+(function(){
+  const layout = [
+    "###################",
+    "#........#........#",
+    "#.##.###.#.###.##.#",
+    "#.................#",
+    "#.##.#.#####.#.##.#",
+    "#....#...#...#....#",
+    "####.###.#.###.####",
+    "#........#........#",
+    "#.##.###.#.###.##.#",
+    "#.................#",
+    "###################"
+  ];
+  const cell = 20;
+  const canvas = document.getElementById('pac-canvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = layout[0].length*cell;
+  canvas.height = layout.length*cell;
+
+  let grid, player, ghost, score, alive, won, loopId, ghostLoopId;
+
+  function reset(){
+    grid = layout.map(r=>r.split(''));
+    player = {x:1,y:1};
+    ghost = {x:17,y:9};
+    score = 0; alive = true; won = false;
+    document.getElementById('pac-score').textContent = score;
+    document.getElementById('pac-msg').textContent = '';
+    draw();
+  }
+  function isWall(x,y){
+    return !grid[y] || grid[y][x]===undefined || grid[y][x]==='#';
+  }
+  function dotsLeft(){
+    return grid.some(row=>row.includes('.'));
+  }
+  function moveGhost(){
+    if(!alive || won) return;
+    const dirs = [[1,0],[-1,0],[0,1],[0,-1]];
+    let candidates = dirs.filter(([dx,dy])=>!isWall(ghost.x+dx, ghost.y+dy));
+    if(candidates.length){
+      candidates.sort((a,b)=>{
+        const da = Math.abs(ghost.x+a[0]-player.x)+Math.abs(ghost.y+a[1]-player.y);
+        const db = Math.abs(ghost.x+b[0]-player.x)+Math.abs(ghost.y+b[1]-player.y);
+        return (Math.random()<0.6) ? da-db : Math.random()-0.5;
+      });
+      const [dx,dy] = candidates[0];
+      ghost.x += dx; ghost.y += dy;
+    }
+    checkCatch();
+    draw();
+  }
+  function checkCatch(){
+    if(ghost.x===player.x && ghost.y===player.y){
+      alive = false;
+      document.getElementById('pac-msg').textContent = 'O fantasma te pegou — clique em Reiniciar';
+    }
+  }
+  function draw(){
+    ctx.fillStyle = '#0B1213'; ctx.fillRect(0,0,canvas.width,canvas.height);
+    for(let y=0;y<grid.length;y++){
+      for(let x=0;x<grid[y].length;x++){
+        const c = grid[y][x];
+        if(c==='#'){
+          ctx.fillStyle = '#2A363C';
+          ctx.fillRect(x*cell, y*cell, cell, cell);
+        } else if(c==='.'){
+          ctx.fillStyle = '#F2B84B';
+          ctx.beginPath();
+          ctx.arc(x*cell+cell/2, y*cell+cell/2, 2.5, 0, Math.PI*2);
+          ctx.fill();
+        }
+      }
+    }
+    ctx.fillStyle = '#4FD1C5';
+    ctx.beginPath();
+    ctx.arc(player.x*cell+cell/2, player.y*cell+cell/2, cell/2-2, 0.25*Math.PI, 1.75*Math.PI);
+    ctx.lineTo(player.x*cell+cell/2, player.y*cell+cell/2);
+    ctx.fill();
+
+    ctx.fillStyle = '#E5636B';
+    ctx.beginPath();
+    ctx.arc(ghost.x*cell+cell/2, ghost.y*cell+cell/2, cell/2-2, Math.PI, 0);
+    ctx.lineTo(ghost.x*cell+cell-2, ghost.y*cell+cell-2);
+    ctx.lineTo(ghost.x*cell+2, ghost.y*cell+cell-2);
+    ctx.fill();
+
+    if(!alive || won){
+      ctx.fillStyle = 'rgba(11,18,19,0.85)';
+      ctx.fillRect(0,0,canvas.width,canvas.height);
+    }
+  }
+  document.addEventListener('keydown', e=>{
+    if(!document.getElementById('game-pacman').classList.contains('active') || !alive || won) return;
+    let dx=0, dy=0;
+    if(e.key==='ArrowUp'){ dy=-1; e.preventDefault(); }
+    else if(e.key==='ArrowDown'){ dy=1; e.preventDefault(); }
+    else if(e.key==='ArrowLeft'){ dx=-1; e.preventDefault(); }
+    else if(e.key==='ArrowRight'){ dx=1; e.preventDefault(); }
+    else return;
+    if(!isWall(player.x+dx, player.y+dy)){
+      player.x += dx; player.y += dy;
+      if(grid[player.y][player.x]==='.'){
+        grid[player.y][player.x]=' ';
+        score++; document.getElementById('pac-score').textContent = score;
+        if(!dotsLeft()){
+          won = true;
+          document.getElementById('pac-msg').textContent = 'Você comeu tudo! 🎉';
+        }
+      }
+      checkCatch();
+      draw();
+    }
+  });
+  document.getElementById('pac-restart').addEventListener('click', reset);
+  reset();
+  clearInterval(ghostLoopId);
+  ghostLoopId = setInterval(moveGhost, 420);
+})();
+
+/* ---------- CROSSWORD ---------- */
+(function(){
+  // '#' = blocked cell, letter = solution
+  const solution = [
+    ['J','O','G','O'],
+    ['A','#','A','#'],
+    ['V','#','M','#'],
+    ['A','#','E','#']
+  ];
+  const numbers = { '0,0':1, '0,2':2 };
+
+  function build(){
+    const box = document.getElementById('cross-grid');
+    box.innerHTML = '';
+    for(let r=0;r<4;r++){
+      for(let c=0;c<4;c++){
+        const cellDiv = document.createElement('div');
+        cellDiv.className = 'cross-cell' + (solution[r][c]==='#' ? ' blocked' : '');
+        if(solution[r][c] !== '#'){
+          const key = r+','+c;
+          if(numbers[key]){
+            const num = document.createElement('span');
+            num.className = 'cross-num';
+            num.textContent = numbers[key];
+            cellDiv.appendChild(num);
+          }
+          const input = document.createElement('input');
+          input.maxLength = 1;
+          input.dataset.r = r; input.dataset.c = c;
+          input.addEventListener('input', e=>{
+            e.target.value = e.target.value.toUpperCase().slice(-1);
+            if(e.target.value){
+              const inputs = Array.from(box.querySelectorAll('input'));
+              const idx = inputs.indexOf(e.target);
+              if(idx>=0 && idx<inputs.length-1) inputs[idx+1].focus();
+            }
+          });
+          cellDiv.appendChild(input);
+        }
+        box.appendChild(cellDiv);
+      }
+    }
+  }
+  document.getElementById('cross-check').addEventListener('click', ()=>{
+    const inputs = document.querySelectorAll('#cross-grid input');
+    let allOk = true;
+    inputs.forEach(inp=>{
+      const r = +inp.dataset.r, c = +inp.dataset.c;
+      const ok = inp.value === solution[r][c];
+      inp.classList.toggle('ok', ok);
+      inp.classList.toggle('bad', !ok);
+      if(!ok) allOk = false;
+    });
+    document.getElementById('cross-msg').textContent = allOk ? 'Tudo certo! 🎉' : 'Ainda tem letra errada.';
+  });
+  build();
+})();
+</script>
+</body>
+</html>
