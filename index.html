@@ -168,6 +168,53 @@
     max-width:60ch;
     font-size:0.95rem;
   }
+  .project .shot{
+    margin-top:14px;
+    aspect-ratio:16/9;
+    max-width:420px;
+    border:1px dashed var(--line);
+    background:var(--surface);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:var(--muted);
+    font-size:0.82rem;
+    text-align:center;
+    padding:12px;
+  }
+  .project .download{
+    margin-top:14px;
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    font-size:0.85rem;
+    color:var(--teal);
+    text-decoration:none;
+    border:1px solid var(--line);
+    padding:8px 14px;
+  }
+  .project .download:hover{ border-color:var(--teal); }
+
+  /* ---------- TERMINAL ---------- */
+  .terminal{
+    margin-top:14px;
+    max-width:480px;
+    background:#0B1213;
+    border:1px solid var(--line);
+    font-family:'JetBrains Mono','Consolas',monospace;
+    font-size:0.82rem;
+    padding:16px;
+    color:#B7EFC5;
+    min-height:110px;
+  }
+  .terminal .caret{
+    display:inline-block;
+    width:7px; height:1em;
+    background:#B7EFC5;
+    vertical-align:text-bottom;
+    animation:blink 1s step-start infinite;
+  }
+  @keyframes blink{ 50%{ opacity:0; } }
 
   /* ---------- TESTIMONIALS ---------- */
   .testimonials{
@@ -263,24 +310,36 @@
       <h3>CleanWave</h3>
       <p class="stack mono">Python · PySide6 · PyInstaller</p>
       <p class="desc">Limpador de PC para Windows com interface dark, empacotado como executável. Ganhou uma versão extra, o CleanWave for Devs, com módulos que detectam node_modules, caches de gerenciador de pacotes e projetos abandonados.</p>
+      <!-- TODO Artur: troca esse placeholder por um print real (ex.: <img src="prints/cleanwave.png" style="width:100%;max-width:420px;display:block;margin-top:14px;">) -->
+      <div class="shot">print em breve</div>
+      <!-- TODO Artur: troca o href pelo link do arquivo na aba Releases do repositório -->
+      <a class="download mono" href="#">↓ baixar .exe (GitHub Releases)</a>
     </div>
 
     <div class="project">
       <h3>Plugin VST3 de detecção de acordes</h3>
       <p class="stack mono">C++ · JUCE</p>
       <p class="desc">Plugin para FL Studio que detecta acordes e escala em tempo real via chromagram, com sugestão de progressão, histórico de acordes e interface bilíngue (PT/EN) — feito para uso durante sample chopping.</p>
+      <div class="shot">print/gif em breve</div>
+      <a class="download mono" href="#">↓ baixar VST3 (GitHub Releases)</a>
     </div>
 
     <div class="project">
       <h3>Songwriting Notepad</h3>
       <p class="stack mono">JavaScript · Web App</p>
       <p class="desc">Aplicativo web 100% local para composição de letras em português, com contagem silábica, detecção de rima por vogal tônica, escansão visual e identificação de métrica (redondilha, decassílabo etc.).</p>
+      <div class="shot">print em breve</div>
+      <!-- TODO Artur: hospeda o app numa subpasta do GitHub Pages e troca o href pelo link ao vivo -->
+      <a class="download mono" href="#">↗ testar ao vivo</a>
     </div>
 
     <div class="project">
       <h3>Pipeline de captura de VODs</h3>
       <p class="stack mono">Batch · yt-dlp · ffmpeg</p>
       <p class="desc">Scripts para baixar VODs e clipes de Twitch, Kick, YouTube e Instagram já prontos para importar no DaVinci Resolve, com correção de bugs de stream duplicado vindos de downloads HLS.</p>
+      <div class="terminal mono" id="vod-terminal" aria-hidden="true"></div>
+      <!-- TODO Artur: troca o href pelo link do .zip na aba Releases do repositório -->
+      <a class="download mono" href="#">↓ baixar scripts (.zip)</a>
     </div>
   </section>
 
@@ -298,7 +357,7 @@
       </blockquote>
       <blockquote>
         Ótimo profissional, educado, atencioso, desenvolve ótima conversação.
-        <cite>— Giovani Fraga, GetNinjas</cite>
+        <cite>— Giovani Fraga Lezama, GetNinjas</cite>
       </blockquote>
       <blockquote>
         Trabalho sensacional. Deixo minha recomendação pra quem busca um serviço de qualidade.
@@ -343,5 +402,60 @@
 
 </div>
 
+<script>
+(function(){
+  var el = document.getElementById('vod-terminal');
+  if(!el) return;
+
+  var lines = [
+    { text: '> baixar_vods.bat', pause: 400 },
+    { text: 'Buscando VOD na Twitch...', pause: 300 },
+    { text: 'Baixando stream (yt-dlp)...', pause: 300 },
+    { text: 'Corrigindo áudio/vídeo duplicado (ffmpeg)...', pause: 300 },
+    { text: '✔ vod_2026-09-13.mp4 pronto para o Resolve', pause: 0 }
+  ];
+
+  var started = false;
+
+  function typeLines(){
+    if(started) return;
+    started = true;
+    el.textContent = '';
+    var lineIndex = 0, charIndex = 0, current = document.createElement('div');
+    el.appendChild(current);
+
+    function step(){
+      if(lineIndex >= lines.length){
+        var caret = document.createElement('span');
+        caret.className = 'caret';
+        current.appendChild(caret);
+        return;
+      }
+      var line = lines[lineIndex];
+      if(charIndex <= line.text.length){
+        current.textContent = line.text.slice(0, charIndex);
+        charIndex++;
+        setTimeout(step, 18 + Math.random()*22);
+      } else {
+        lineIndex++;
+        charIndex = 0;
+        current = document.createElement('div');
+        el.appendChild(current);
+        setTimeout(step, line.pause);
+      }
+    }
+    step();
+  }
+
+  if('IntersectionObserver' in window){
+    var obs = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){ if(e.isIntersecting) typeLines(); });
+    }, { threshold: 0.4 });
+    obs.observe(el);
+  } else {
+    typeLines();
+  }
+})();
+</script>
 </body>
 </html>
